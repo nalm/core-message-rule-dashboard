@@ -1,0 +1,1889 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>당신의 1표는 어떻게 설계되는가</title>
+  <style>
+    :root {
+      --ink: #18212f;
+      --muted: #5f6877;
+      --line: #d9dfeb;
+      --paper: #fbfcfe;
+      --soft: #eef3f6;
+      --teal: #167c80;
+      --blue: #3469b7;
+      --coral: #c95042;
+      --amber: #c48120;
+      --green: #3e7d42;
+      --violet: #6962a8;
+      --dark: #101927;
+      --shadow: 0 18px 40px rgba(16, 25, 39, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      line-height: 1.55;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      background:
+        linear-gradient(90deg, rgba(24, 33, 47, 0.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(24, 33, 47, 0.04) 1px, transparent 1px),
+        var(--paper);
+      background-size: 44px 44px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 68px;
+      padding: 14px clamp(18px, 4vw, 54px);
+      border-bottom: 1px solid rgba(217, 223, 235, 0.9);
+      background: rgba(251, 252, 254, 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 210px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      box-shadow: 4px 4px 0 var(--amber);
+    }
+
+    .brand-mark span {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      outline: none;
+      color: var(--ink);
+      background: #eef3f6;
+    }
+
+    .hero {
+      min-height: calc(100vh - 68px);
+      display: grid;
+      align-items: center;
+      padding: clamp(32px, 6vw, 76px) clamp(18px, 4vw, 54px) 28px;
+    }
+
+    .hero-grid {
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr);
+      gap: clamp(28px, 4vw, 58px);
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(42px, 6vw, 88px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .hero-lead {
+      margin: 22px 0 0;
+      max-width: 650px;
+      color: #374151;
+      font-size: clamp(18px, 2vw, 23px);
+      font-weight: 600;
+      text-wrap: balance;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .primary-action,
+    .secondary-action {
+      min-height: 44px;
+      border-radius: 7px;
+      border: 1px solid var(--ink);
+      padding: 10px 15px;
+      font-weight: 800;
+    }
+
+    .primary-action {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 5px 5px 0 var(--teal);
+    }
+
+    .secondary-action {
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .hero-note {
+      margin-top: 22px;
+      padding-left: 14px;
+      border-left: 4px solid var(--amber);
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 620px;
+    }
+
+    .mechanism {
+      position: relative;
+      min-height: 560px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .mechanism::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(22, 124, 128, 0.08), transparent 32%),
+        linear-gradient(315deg, rgba(201, 80, 66, 0.08), transparent 36%);
+      pointer-events: none;
+    }
+
+    .mechanism-stage {
+      position: absolute;
+      inset: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .mechanism-node {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 170px;
+      padding: 18px;
+      border: 1px solid rgba(24, 33, 47, 0.16);
+      border-radius: var(--radius);
+      background: #fff;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .mechanism-node:hover,
+    .mechanism-node:focus-within {
+      transform: translateY(-3px);
+      border-color: var(--ink);
+      box-shadow: 0 16px 28px rgba(16, 25, 39, 0.12);
+    }
+
+    .mechanism-node strong {
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.2;
+    }
+
+    .mechanism-node p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .node-tag {
+      width: fit-content;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag-start { background: var(--blue); }
+    .tag-design { background: var(--teal); }
+    .tag-approve { background: var(--amber); }
+    .tag-gate { background: var(--coral); }
+
+    .central-vote {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 170px;
+      height: 170px;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 9px rgba(22, 124, 128, 0.1), 0 24px 42px rgba(16, 25, 39, 0.18);
+      z-index: 4;
+      text-align: center;
+      padding: 18px;
+    }
+
+    .central-vote span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .central-vote strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .scroll-cue {
+      width: min(1240px, 100%);
+      margin: 24px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .cue-item {
+      min-height: 64px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    section {
+      padding: clamp(56px, 8vw, 106px) clamp(18px, 4vw, 54px);
+    }
+
+    .section-inner {
+      width: min(1240px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      max-width: 830px;
+      font-size: clamp(31px, 4.3vw, 58px);
+      line-height: 1.06;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .section-lead {
+      margin: 16px 0 0;
+      max-width: 790px;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .authority-grid {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .authority-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .authority-button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+      transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .authority-button:hover,
+    .authority-button:focus-visible,
+    .authority-button.active {
+      outline: none;
+      border-color: var(--ink);
+      transform: translateX(3px);
+      box-shadow: 0 12px 24px rgba(16, 25, 39, 0.1);
+    }
+
+    .authority-index {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      background: var(--soft);
+      font-weight: 900;
+    }
+
+    .authority-button.active .authority-index {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .authority-name {
+      display: block;
+      font-weight: 900;
+    }
+
+    .authority-role {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .authority-arrow {
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .authority-panel {
+      min-height: 520px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .authority-visual {
+      position: relative;
+      min-height: 250px;
+      padding: 22px;
+      background: #f4f7fb;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .flow-line {
+      position: absolute;
+      left: 50px;
+      right: 50px;
+      top: 50%;
+      height: 5px;
+      transform: translateY(-50%);
+      background: #ccd5e4;
+      border-radius: 99px;
+    }
+
+    .flow-pulse {
+      position: absolute;
+      top: 50%;
+      left: 50px;
+      height: 5px;
+      width: 20%;
+      transform: translateY(-50%);
+      border-radius: 99px;
+      background: var(--teal);
+      transition: left 220ms ease, width 220ms ease, background 220ms ease;
+    }
+
+    .flow-stop {
+      position: absolute;
+      top: 50%;
+      width: 72px;
+      min-height: 88px;
+      transform: translate(-50%, -50%);
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .flow-stop .dot {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 2px solid #aab5c8;
+      border-radius: 50%;
+      background: #fff;
+      color: var(--muted);
+      font-size: 15px;
+      transition: transform 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+
+    .flow-stop.active {
+      color: var(--ink);
+    }
+
+    .flow-stop.active .dot {
+      transform: scale(1.14);
+      border-color: var(--ink);
+      color: var(--ink);
+      box-shadow: 0 10px 22px rgba(16, 25, 39, 0.14);
+    }
+
+    .flow-stop:nth-child(3) { left: 10%; }
+    .flow-stop:nth-child(4) { left: 32%; }
+    .flow-stop:nth-child(5) { left: 54%; }
+    .flow-stop:nth-child(6) { left: 76%; }
+    .flow-stop:nth-child(7) { left: 92%; }
+
+    .authority-detail {
+      padding: 24px;
+    }
+
+    .authority-detail h3 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.1;
+    }
+
+    .authority-detail p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .variable-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .variable-chip {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fbfcfe;
+      font-weight: 850;
+    }
+
+    .dark-band {
+      background: var(--dark);
+      color: #fff;
+    }
+
+    .dark-band .section-kicker {
+      color: #8fd7d3;
+    }
+
+    .dark-band .section-lead {
+      color: #c7d1e0;
+    }
+
+    .simulator {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .control-panel {
+      position: sticky;
+      top: 88px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+    }
+
+    .control-panel h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+
+    .scenario-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .scenario-tab {
+      min-height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #dce5f3;
+      font-weight: 900;
+    }
+
+    .scenario-tab.active,
+    .scenario-tab:hover,
+    .scenario-tab:focus-visible {
+      outline: none;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .range-group {
+      display: grid;
+      gap: 12px;
+      padding: 16px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .range-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 850;
+    }
+
+    .range-value {
+      color: #8fd7d3;
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #8fd7d3;
+    }
+
+    .helper-copy {
+      margin: 8px 0 0;
+      color: #b9c5d8;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .simulation-stage {
+      min-height: 640px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--ink);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .scenario {
+      display: none;
+      padding: 24px;
+    }
+
+    .scenario.active {
+      display: block;
+    }
+
+    .scenario-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .scenario-header h3 {
+      margin: 0;
+      font-size: clamp(25px, 3vw, 38px);
+      line-height: 1.1;
+    }
+
+    .scenario-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-weight: 600;
+      max-width: 660px;
+    }
+
+    .winner-badge {
+      flex: 0 0 auto;
+      min-width: 172px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f4f7fb;
+      text-align: center;
+    }
+
+    .winner-badge span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .winner-badge strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 24px;
+    }
+
+    .bar-chart {
+      display: grid;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(116px, 150px) minmax(0, 1fr) 74px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bar-label {
+      font-weight: 950;
+    }
+
+    .bar-track {
+      position: relative;
+      height: 42px;
+      border-radius: 7px;
+      background: #e7edf5;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 7px;
+      background: var(--teal);
+      transition: width 320ms ease, background 220ms ease;
+    }
+
+    .bar-row:nth-child(2) .bar-fill {
+      background: var(--coral);
+    }
+
+    .bar-value {
+      font-weight: 950;
+      text-align: right;
+    }
+
+    .region-table {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .region-cell {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+    }
+
+    .region-cell span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .region-cell strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 22px;
+    }
+
+    .cutoff-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 24px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .candidate-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .candidate-row {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 72px 80px;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+      transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease;
+    }
+
+    .candidate-row.eliminated {
+      opacity: 0.45;
+      transform: translateX(10px);
+      border-color: #f0c2bd;
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #fff;
+      font-weight: 950;
+    }
+
+    .avatar.a { background: var(--teal); }
+    .avatar.b { background: var(--blue); }
+    .avatar.c { background: var(--coral); }
+    .avatar.d { background: var(--amber); }
+
+    .candidate-name {
+      display: block;
+      font-weight: 950;
+    }
+
+    .candidate-data {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .score {
+      font-size: 22px;
+      font-weight: 950;
+      text-align: right;
+    }
+
+    .pass-label {
+      justify-self: end;
+      width: fit-content;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #e6f4ed;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .candidate-row.eliminated .pass-label {
+      background: #fff0ee;
+      color: var(--coral);
+    }
+
+    .funnel {
+      position: relative;
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(180deg, transparent 0 26%, rgba(24, 33, 47, 0.08) 26% 27%, transparent 27%),
+        linear-gradient(180deg, transparent 0 50%, rgba(24, 33, 47, 0.08) 50% 51%, transparent 51%),
+        linear-gradient(180deg, transparent 0 74%, rgba(24, 33, 47, 0.08) 74% 75%, transparent 75%);
+    }
+
+    .funnel-shape {
+      width: 180px;
+      height: 320px;
+      clip-path: polygon(0 0, 100% 0, 65% 100%, 35% 100%);
+      background: linear-gradient(180deg, #e8eef7, #cbd8e8);
+      border: 1px solid var(--line);
+    }
+
+    .funnel-text {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-weight: 950;
+      color: var(--ink);
+    }
+
+    .timeline {
+      background: #f3f6f8;
+    }
+
+    .journey-board {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .candidate-selector {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .candidate-selector h3 {
+      margin: 0 0 14px;
+      font-size: 22px;
+    }
+
+    .candidate-picks {
+      display: grid;
+      gap: 8px;
+    }
+
+    .candidate-pick {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      padding: 9px 10px;
+      font-weight: 900;
+      text-align: left;
+    }
+
+    .candidate-pick.active,
+    .candidate-pick:hover,
+    .candidate-pick:focus-visible {
+      outline: none;
+      border-color: var(--ink);
+      background: #f4f7fb;
+    }
+
+    .journey-route {
+      position: relative;
+      min-height: 560px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .route-line {
+      position: absolute;
+      left: 74px;
+      right: 74px;
+      top: 110px;
+      height: 8px;
+      border-radius: 999px;
+      background: #dce4ef;
+    }
+
+    .route-progress {
+      position: absolute;
+      left: 74px;
+      top: 110px;
+      width: 0%;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      transition: width 280ms ease, background 220ms ease;
+    }
+
+    .hurdle-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .hurdle {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .hurdle-dot {
+      display: grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      border: 3px solid #bcc8d8;
+      border-radius: 50%;
+      background: #fff;
+      font-size: 22px;
+      font-weight: 950;
+      transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+    }
+
+    .hurdle.passed .hurdle-dot {
+      border-color: var(--green);
+      background: #e6f4ed;
+      color: var(--green);
+    }
+
+    .hurdle.failed .hurdle-dot {
+      border-color: var(--coral);
+      background: #fff0ee;
+      color: var(--coral);
+    }
+
+    .hurdle h4 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.24;
+    }
+
+    .hurdle p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .journey-result {
+      margin-top: 58px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.58fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .result-copy {
+      min-height: 188px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+    }
+
+    .result-copy span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .result-copy h3 {
+      margin: 5px 0 8px;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.12;
+    }
+
+    .result-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .mini-ledger {
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .ledger-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #dce5f3;
+      font-weight: 800;
+    }
+
+    .ledger-row strong {
+      color: #fff;
+      font-size: 22px;
+    }
+
+    .method {
+      background: #fff;
+    }
+
+    .method-grid {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .method-item {
+      min-height: 210px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+    }
+
+    .method-item h3 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .method-item p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .method-item ul {
+      margin: 14px 0 0;
+      padding-left: 19px;
+      color: var(--ink);
+      font-weight: 750;
+    }
+
+    .method-item li + li {
+      margin-top: 6px;
+    }
+
+    .footer {
+      padding: 28px clamp(18px, 4vw, 54px) 44px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      background: #f4f7fb;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .footer-inner {
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1050px) {
+      .hero-grid,
+      .authority-grid,
+      .simulator,
+      .journey-board,
+      .journey-result {
+        grid-template-columns: 1fr;
+      }
+
+      .mechanism {
+        min-height: 510px;
+      }
+
+      .control-panel {
+        position: static;
+      }
+
+      .journey-route {
+        min-height: 620px;
+      }
+
+      .hurdle-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 40px;
+      }
+
+      .route-line,
+      .route-progress {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        position: relative;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .mechanism {
+        min-height: 760px;
+      }
+
+      .mechanism-stage {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+      }
+
+      .central-vote {
+        width: 138px;
+        height: 138px;
+      }
+
+      .central-vote strong {
+        font-size: 27px;
+      }
+
+      .scroll-cue,
+      .variable-grid,
+      .region-table,
+      .method-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .authority-panel {
+        min-height: auto;
+      }
+
+      .authority-visual {
+        min-height: 360px;
+      }
+
+      .flow-line,
+      .flow-pulse {
+        left: 50%;
+        right: auto;
+        top: 36px;
+        bottom: 36px;
+        width: 5px;
+        height: auto;
+        transform: translateX(-50%);
+      }
+
+      .flow-stop {
+        top: auto;
+        left: 50% !important;
+        transform: translateX(-50%);
+      }
+
+      .flow-stop:nth-child(3) { top: 8%; }
+      .flow-stop:nth-child(4) { top: 26%; }
+      .flow-stop:nth-child(5) { top: 45%; }
+      .flow-stop:nth-child(6) { top: 64%; }
+      .flow-stop:nth-child(7) { top: 82%; }
+
+      .scenario-header,
+      .cutoff-board {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .winner-badge {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .bar-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .bar-value {
+        text-align: left;
+      }
+
+      .candidate-row {
+        grid-template-columns: 42px minmax(0, 1fr);
+      }
+
+      .score,
+      .pass-label {
+        justify-self: start;
+        text-align: left;
+        grid-column: 2;
+      }
+
+      .hurdle-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar" aria-label="페이지 내 이동">
+      <a class="brand" href="#top" aria-label="처음으로 이동">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span>1표 설계도</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#map">권한 지도</a>
+        <a href="#simulator">룰 시뮬레이터</a>
+        <a href="#journey">후보 여정</a>
+        <a href="#method">방법론</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow"><span class="status-dot"></span>전당대회 룰 인터랙티브</div>
+            <h1 id="hero-title">당신의 1표는 어떻게 설계되는가</h1>
+            <p class="hero-lead">당원 투표 70%라는 숫자는 끝이 아니라 시작입니다. 기구가 정한 룰은 표의 무게, 후보의 생존, 최종 결과를 함께 움직입니다.</p>
+            <div class="hero-actions">
+              <a class="primary-action" href="#simulator">룰 바꿔보기</a>
+              <a class="secondary-action" href="#map">권한 흐름 보기</a>
+            </div>
+            <p class="hero-note">현재 화면의 수치와 후보는 설명용 가상 모델입니다. 실제 페이지로 발행할 때는 대상 정당의 당헌·당규와 의결 자료를 연결해 교체하도록 설계했습니다.</p>
+          </div>
+
+          <div class="mechanism" aria-label="룰이 표로 이어지는 구조">
+            <div class="mechanism-stage">
+              <article class="mechanism-node">
+                <span class="node-tag tag-start">시동</span>
+                <div>
+                  <strong>기구 구성</strong>
+                  <p>최고 의사결정 단위가 선거 준비 체계를 출발시킵니다.</p>
+                </div>
+              </article>
+              <article class="mechanism-node">
+                <span class="node-tag tag-design">설계</span>
+                <div>
+                  <strong>세부 룰</strong>
+                  <p>반영 비율, 컷오프, 선거운동 방식이 구체화됩니다.</p>
+                </div>
+              </article>
+              <article class="mechanism-node">
+                <span class="node-tag tag-approve">승인</span>
+                <div>
+                  <strong>최종 의결</strong>
+                  <p>예외 조항과 확정 절차가 결과의 경계를 정합니다.</p>
+                </div>
+              </article>
+              <article class="mechanism-node">
+                <span class="node-tag tag-gate">관문</span>
+                <div>
+                  <strong>컷오프·본경선</strong>
+                  <p>후보는 단계마다 다른 표본과 기준을 통과해야 합니다.</p>
+                </div>
+              </article>
+            </div>
+            <div class="central-vote" aria-hidden="true">
+              <span>가상 원칙</span>
+              <strong>70%</strong>
+              <span>당원 반영</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scroll-cue" aria-label="페이지 핵심 구성">
+          <div class="cue-item">1. 어느 기구가 어떤 변수를 만지는지 확인</div>
+          <div class="cue-item">2. 가중치와 컷오프 반영률을 직접 조정</div>
+          <div class="cue-item">3. 후보가 어디서 탈락하거나 살아남는지 추적</div>
+        </div>
+      </section>
+
+      <section id="map" aria-labelledby="map-title">
+        <div class="section-inner">
+          <p class="section-kicker">Authority Map</p>
+          <h2 class="section-title" id="map-title">룰 메이커의 세계는 조직도가 아니라 권한의 흐름입니다.</h2>
+          <p class="section-lead">각 기구는 같은 선거를 다루더라도 역할이 다릅니다. 구성, 설계, 집행, 승인, 관문 중 어디에 서 있는지에 따라 1표에 영향을 주는 방식도 달라집니다.</p>
+
+          <div class="authority-grid">
+            <div class="authority-list" id="authorityList" aria-label="기구 선택"></div>
+            <article class="authority-panel" aria-live="polite">
+              <div class="authority-visual">
+                <div class="flow-line" aria-hidden="true"></div>
+                <div class="flow-pulse" id="flowPulse" aria-hidden="true"></div>
+                <div class="flow-stop" data-stop="0"><span class="dot">1</span><span>최고위</span></div>
+                <div class="flow-stop" data-stop="1"><span class="dot">2</span><span>전준위</span></div>
+                <div class="flow-stop" data-stop="2"><span class="dot">3</span><span>선관위</span></div>
+                <div class="flow-stop" data-stop="3"><span class="dot">4</span><span>당무위</span></div>
+                <div class="flow-stop" data-stop="4"><span class="dot">5</span><span>중앙위</span></div>
+              </div>
+              <div class="authority-detail">
+                <h3 id="authorityTitle"></h3>
+                <p id="authorityDesc"></p>
+                <div class="variable-grid" id="variableGrid" aria-label="핵심 변수"></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="dark-band" id="simulator" aria-labelledby="sim-title">
+        <div class="section-inner">
+          <p class="section-kicker">Rule Simulator</p>
+          <h2 class="section-title" id="sim-title">보이지 않는 룰은 막대그래프에서 바로 드러납니다.</h2>
+          <p class="section-lead">아래 조작부는 실제 정당 수치가 아니라 구조를 이해하기 위한 가상 예시입니다. 같은 당원 지지라도 지역 가중치와 컷오프 반영률이 바뀌면 승패와 생존 여부가 달라집니다.</p>
+
+          <div class="simulator">
+            <aside class="control-panel" aria-label="시뮬레이션 조작부">
+              <h3>룰 조작부</h3>
+              <div class="scenario-tabs" role="tablist" aria-label="시나리오 선택">
+                <button class="scenario-tab active" type="button" data-scenario="weight" role="tab" aria-selected="true">지역 가중치</button>
+                <button class="scenario-tab" type="button" data-scenario="cutoff" role="tab" aria-selected="false">컷오프</button>
+              </div>
+
+              <div class="range-group" data-controls="weight">
+                <label class="range-label" for="regionWeight">
+                  <span>영남권 가중치</span>
+                  <span class="range-value" id="regionWeightValue">1.20x</span>
+                </label>
+                <input id="regionWeight" type="range" min="1" max="1.6" step="0.05" value="1.2">
+                <p class="helper-copy">가중치가 높아질수록 영남권 득표가 최종 점수에 더 크게 반영됩니다.</p>
+              </div>
+
+              <div class="range-group" data-controls="cutoff">
+                <label class="range-label" for="centralWeight">
+                  <span>중앙위 반영률</span>
+                  <span class="range-value" id="centralWeightValue">25%</span>
+                </label>
+                <input id="centralWeight" type="range" min="0" max="50" step="5" value="25">
+                <p class="helper-copy">반영률이 높아질수록 중앙위 지지가 낮은 후보는 예비경선에서 밀릴 수 있습니다.</p>
+              </div>
+            </aside>
+
+            <div class="simulation-stage">
+              <article class="scenario active" id="scenarioWeight" data-panel="weight">
+                <div class="scenario-header">
+                  <div>
+                    <h3>지역별 득표의 무게가 바뀌면 누가 앞서나</h3>
+                    <p>후보 A는 수도권, 후보 B는 영남권 지지가 강한 가상 구도입니다. 영남권 가중치를 올리면 전체 득표수는 같아 보여도 최종 환산 점수는 달라집니다.</p>
+                  </div>
+                  <div class="winner-badge">
+                    <span>현재 선두</span>
+                    <strong id="weightWinner">후보 A</strong>
+                  </div>
+                </div>
+
+                <div class="bar-chart" aria-label="후보별 환산 점수">
+                  <div class="bar-row">
+                    <div class="bar-label">후보 A</div>
+                    <div class="bar-track"><div class="bar-fill" id="barA"></div></div>
+                    <div class="bar-value" id="scoreA">0</div>
+                  </div>
+                  <div class="bar-row">
+                    <div class="bar-label">후보 B</div>
+                    <div class="bar-track"><div class="bar-fill" id="barB"></div></div>
+                    <div class="bar-value" id="scoreB">0</div>
+                  </div>
+                </div>
+
+                <div class="region-table" aria-label="지역별 가상 득표">
+                  <div class="region-cell">
+                    <span>수도권 가상 득표</span>
+                    <strong>A 46 · B 31</strong>
+                  </div>
+                  <div class="region-cell">
+                    <span>영남권 가상 득표</span>
+                    <strong>A 24 · B 43</strong>
+                  </div>
+                  <div class="region-cell">
+                    <span>기타권 가상 득표</span>
+                    <strong>A 30 · B 26</strong>
+                  </div>
+                </div>
+              </article>
+
+              <article class="scenario" id="scenarioCutoff" data-panel="cutoff">
+                <div class="scenario-header">
+                  <div>
+                    <h3>컷오프 반영률은 후보의 생존선을 바꿉니다.</h3>
+                    <p>본경선에 3명만 진출하는 가상 예비경선입니다. 당원 지지가 가장 높은 후보라도 다른 표본의 반영률이 높아지면 관문을 통과하지 못할 수 있습니다.</p>
+                  </div>
+                  <div class="winner-badge">
+                    <span>탈락 후보</span>
+                    <strong id="eliminatedName">후보 C</strong>
+                  </div>
+                </div>
+
+                <div class="cutoff-board">
+                  <div class="candidate-stack" id="candidateStack" aria-label="후보별 컷오프 점수"></div>
+                  <div class="funnel" aria-label="컷오프 깔때기">
+                    <div class="funnel-shape" aria-hidden="true"></div>
+                    <div class="funnel-text">
+                      <div>
+                        본경선<br>
+                        진출 3명
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="timeline" id="journey" aria-labelledby="journey-title">
+        <div class="section-inner">
+          <p class="section-kicker">Candidate Journey</p>
+          <h2 class="section-title" id="journey-title">후보자는 등록부터 당선까지 여러 관문을 통과합니다.</h2>
+          <p class="section-lead">타임라인은 후보가 만나는 허들을 한 줄로 보여줍니다. 왼쪽에서 후보를 바꾸면 컷오프 시뮬레이션 결과와 연결되어 생존 경로가 달라집니다.</p>
+
+          <div class="journey-board">
+            <aside class="candidate-selector" aria-label="후보 선택">
+              <h3>후보 선택</h3>
+              <div class="candidate-picks" id="candidatePicks"></div>
+            </aside>
+
+            <article class="journey-route" aria-live="polite">
+              <div class="route-line" aria-hidden="true"></div>
+              <div class="route-progress" id="routeProgress" aria-hidden="true"></div>
+              <div class="hurdle-grid" id="hurdleGrid"></div>
+
+              <div class="journey-result">
+                <div class="result-copy">
+                  <span>현재 선택 후보</span>
+                  <h3 id="journeyHeadline">후보 A는 본경선에 진출합니다.</h3>
+                  <p id="journeyCopy">예비경선 점수와 서류 심사를 모두 통과한 상태입니다. 이후 본경선 순회 투표에서 지역별 누적 득표가 핵심 변수가 됩니다.</p>
+                </div>
+                <div class="mini-ledger" aria-label="선택 후보 점수">
+                  <div class="ledger-row"><span>당원 지지</span><strong id="ledgerParty">38</strong></div>
+                  <div class="ledger-row"><span>중앙위 지지</span><strong id="ledgerCentral">30</strong></div>
+                  <div class="ledger-row"><span>환산 점수</span><strong id="ledgerScore">36</strong></div>
+                  <div class="ledger-row"><span>컷오프</span><strong id="ledgerStatus">통과</strong></div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="method" id="method" aria-labelledby="method-title">
+        <div class="section-inner">
+          <p class="section-kicker">Editorial Method</p>
+          <h2 class="section-title" id="method-title">실제 발행용으로 바꿀 때 필요한 안전장치까지 넣었습니다.</h2>
+          <p class="section-lead">현재 구현은 바로 시연 가능한 완성형 화면이지만, 수치는 모두 가상입니다. 실제 기사형 페이지로 전환할 때는 아래 세 가지를 확정하면 됩니다.</p>
+
+          <div class="method-grid">
+            <article class="method-item">
+              <h3>규정 확인</h3>
+              <p>기구가 실제로 결정하는 범위를 문서 기준으로 분리합니다.</p>
+              <ul>
+                <li>당헌·당규</li>
+                <li>전당대회 공고</li>
+                <li>전준위·선관위 의결 자료</li>
+              </ul>
+            </article>
+            <article class="method-item">
+              <h3>표본 구분</h3>
+              <p>당원, 일반 여론, 중앙위 등 서로 다른 표본을 같은 그래프에 섞지 않도록 명시합니다.</p>
+              <ul>
+                <li>반영률</li>
+                <li>가중치</li>
+                <li>컷오프 기준</li>
+              </ul>
+            </article>
+            <article class="method-item">
+              <h3>가상값 표시</h3>
+              <p>설명용 수치와 실제 규정 수치를 색상과 라벨로 분리해 오해를 줄입니다.</p>
+              <ul>
+                <li>가상 시나리오 라벨</li>
+                <li>출처 링크 영역</li>
+                <li>업데이트 기준일</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>가상 데이터 기반 인터랙티브 프로토타입</span>
+        <span>최종 발행 전 실제 규정과 출처 검증 필요</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const authorities = [
+      {
+        name: "최고위원회",
+        role: "시동과 구성",
+        title: "최고위원회는 선거 체계의 출발 버튼을 누릅니다.",
+        desc: "전당대회 준비 체계를 구성하고, 어떤 기구가 이후 세부 절차를 다룰지 정합니다. 직접 모든 수치를 계산한다기보다 의사결정의 첫 경로를 엽니다.",
+        variables: ["기구 구성", "일정 출발", "안건 상정", "정치적 기준선"],
+        color: "#3469b7"
+      },
+      {
+        name: "전당대회준비위원회",
+        role: "룰 설계",
+        title: "전준위는 추상적인 원칙을 작동 가능한 룰로 바꿉니다.",
+        desc: "반영 비율, 컷오프 방식, 권역별 순회 방식처럼 선거 경험을 바꾸는 변수들이 이 단계에서 설계안으로 정리됩니다.",
+        variables: ["반영 비율", "컷오프 방식", "토론회 구조", "선거운동 범위"],
+        color: "#167c80"
+      },
+      {
+        name: "선거관리위원회",
+        role: "집행과 심사",
+        title: "선관위는 룰을 후보와 투표 과정에 적용합니다.",
+        desc: "후보 등록, 기탁금, 서류 심사, 투표 안내, 위반 판단 등 실제 선거 운영에서 룰이 작동하는 지점을 관리합니다.",
+        variables: ["후보 등록", "기탁금", "서류 심사", "투표 운영"],
+        color: "#6962a8"
+      },
+      {
+        name: "당무위원회",
+        role: "승인과 예외",
+        title: "당무위는 예외와 최종 승인 지점에서 룰의 경계를 만듭니다.",
+        desc: "준비 기구가 만든 안을 확정하거나 예외 조항을 적용하면서, 후보가 실제로 달릴 수 있는 조건을 좁히거나 넓힐 수 있습니다.",
+        variables: ["최종 승인", "예외 인정", "시행 기준", "해석 권한"],
+        color: "#c48120"
+      },
+      {
+        name: "중앙위원회",
+        role: "관문과 확정",
+        title: "중앙위는 후보군을 압축하는 관문으로 작동할 수 있습니다.",
+        desc: "당헌 확정이나 예비경선 참여 방식에 따라 후보가 본경선에 올라갈 수 있는지를 좌우하는 별도 관문이 됩니다.",
+        variables: ["당헌 확정", "예비경선", "컷오프 표본", "후보 압축"],
+        color: "#c95042"
+      }
+    ];
+
+    const cutoffCandidates = [
+      { id: "a", name: "후보 A", party: 38, central: 30, docs: true, exception: true },
+      { id: "b", name: "후보 B", party: 31, central: 42, docs: true, exception: true },
+      { id: "c", name: "후보 C", party: 47, central: 7, docs: true, exception: true },
+      { id: "d", name: "후보 D", party: 24, central: 40, docs: true, exception: false }
+    ];
+
+    const authorityList = document.getElementById("authorityList");
+    const authorityTitle = document.getElementById("authorityTitle");
+    const authorityDesc = document.getElementById("authorityDesc");
+    const variableGrid = document.getElementById("variableGrid");
+    const flowPulse = document.getElementById("flowPulse");
+    const flowStops = Array.from(document.querySelectorAll(".flow-stop"));
+
+    const regionWeightInput = document.getElementById("regionWeight");
+    const centralWeightInput = document.getElementById("centralWeight");
+    const regionWeightValue = document.getElementById("regionWeightValue");
+    const centralWeightValue = document.getElementById("centralWeightValue");
+    const scenarioTabs = Array.from(document.querySelectorAll(".scenario-tab"));
+    const scenarios = Array.from(document.querySelectorAll(".scenario"));
+    const barA = document.getElementById("barA");
+    const barB = document.getElementById("barB");
+    const scoreA = document.getElementById("scoreA");
+    const scoreB = document.getElementById("scoreB");
+    const weightWinner = document.getElementById("weightWinner");
+    const candidateStack = document.getElementById("candidateStack");
+    const eliminatedName = document.getElementById("eliminatedName");
+    const candidatePicks = document.getElementById("candidatePicks");
+    const hurdleGrid = document.getElementById("hurdleGrid");
+    const routeProgress = document.getElementById("routeProgress");
+    const journeyHeadline = document.getElementById("journeyHeadline");
+    const journeyCopy = document.getElementById("journeyCopy");
+    const ledgerParty = document.getElementById("ledgerParty");
+    const ledgerCentral = document.getElementById("ledgerCentral");
+    const ledgerScore = document.getElementById("ledgerScore");
+    const ledgerStatus = document.getElementById("ledgerStatus");
+
+    let activeAuthority = 0;
+    let activeCandidate = "a";
+
+    function renderAuthorities() {
+      authorityList.innerHTML = "";
+      authorities.forEach((item, index) => {
+        const button = document.createElement("button");
+        button.className = `authority-button${index === activeAuthority ? " active" : ""}`;
+        button.type = "button";
+        button.innerHTML = `
+          <span class="authority-index">${index + 1}</span>
+          <span>
+            <span class="authority-name">${item.name}</span>
+            <span class="authority-role">${item.role}</span>
+          </span>
+          <span class="authority-arrow">›</span>
+        `;
+        button.addEventListener("click", () => setAuthority(index));
+        button.addEventListener("mouseenter", () => setAuthority(index));
+        authorityList.appendChild(button);
+      });
+      updateAuthorityDetail();
+    }
+
+    function setAuthority(index) {
+      activeAuthority = index;
+      updateAuthorityDetail();
+      Array.from(document.querySelectorAll(".authority-button")).forEach((button, buttonIndex) => {
+        button.classList.toggle("active", buttonIndex === index);
+      });
+    }
+
+    function updateAuthorityDetail() {
+      const item = authorities[activeAuthority];
+      authorityTitle.textContent = item.title;
+      authorityDesc.textContent = item.desc;
+      variableGrid.innerHTML = item.variables.map((variable) => `<div class="variable-chip">${variable}</div>`).join("");
+      flowStops.forEach((stop, index) => {
+        stop.classList.toggle("active", index === activeAuthority);
+        const dot = stop.querySelector(".dot");
+        dot.style.borderColor = index === activeAuthority ? item.color : "";
+      });
+
+      const pulseLeft = [50, 50, 50, 50, 50][activeAuthority];
+      const widths = ["10%", "32%", "54%", "76%", "92%"];
+      flowPulse.style.left = `${pulseLeft}px`;
+      flowPulse.style.width = `calc(${widths[activeAuthority]} - 50px)`;
+      flowPulse.style.background = item.color;
+
+      if (window.matchMedia("(max-width: 760px)").matches) {
+        flowPulse.style.left = "50%";
+        flowPulse.style.top = "36px";
+        flowPulse.style.width = "5px";
+        flowPulse.style.height = `${70 + activeAuthority * 58}px`;
+      } else {
+        flowPulse.style.top = "50%";
+        flowPulse.style.height = "5px";
+      }
+    }
+
+    function setScenario(type) {
+      scenarioTabs.forEach((tab) => {
+        const active = tab.dataset.scenario === type;
+        tab.classList.toggle("active", active);
+        tab.setAttribute("aria-selected", String(active));
+      });
+      scenarios.forEach((scenario) => {
+        scenario.classList.toggle("active", scenario.dataset.panel === type);
+      });
+    }
+
+    function updateWeightScenario() {
+      const yFactor = Number(regionWeightInput.value);
+      regionWeightValue.textContent = `${yFactor.toFixed(2)}x`;
+
+      const candidateA = 46 + (24 * yFactor) + 30;
+      const candidateB = 31 + (43 * yFactor) + 26;
+      const max = Math.max(candidateA, candidateB);
+
+      barA.style.width = `${(candidateA / max) * 100}%`;
+      barB.style.width = `${(candidateB / max) * 100}%`;
+      scoreA.textContent = candidateA.toFixed(1);
+      scoreB.textContent = candidateB.toFixed(1);
+      weightWinner.textContent = candidateA >= candidateB ? "후보 A" : "후보 B";
+    }
+
+    function getCutoffResults() {
+      const centralRatio = Number(centralWeightInput.value) / 100;
+      const partyRatio = 1 - centralRatio;
+      const scored = cutoffCandidates.map((candidate) => ({
+        ...candidate,
+        score: (candidate.party * partyRatio) + (candidate.central * centralRatio)
+      }));
+      const ranked = [...scored].sort((a, b) => b.score - a.score);
+      const passedIds = new Set(ranked.slice(0, 3).map((candidate) => candidate.id));
+      return scored.map((candidate) => ({
+        ...candidate,
+        passed: passedIds.has(candidate.id),
+        rank: ranked.findIndex((rankedCandidate) => rankedCandidate.id === candidate.id) + 1
+      }));
+    }
+
+    function updateCutoffScenario() {
+      const centralValue = Number(centralWeightInput.value);
+      centralWeightValue.textContent = `${centralValue}%`;
+      const results = getCutoffResults();
+      const ordered = [...results].sort((a, b) => b.score - a.score);
+      const eliminated = ordered.filter((candidate) => !candidate.passed).sort((a, b) => a.score - b.score)[0];
+      eliminatedName.textContent = eliminated ? eliminated.name : "없음";
+
+      candidateStack.innerHTML = ordered.map((candidate) => `
+        <div class="candidate-row${candidate.passed ? "" : " eliminated"}">
+          <span class="avatar ${candidate.id}">${candidate.name.replace("후보 ", "")}</span>
+          <span>
+            <span class="candidate-name">${candidate.name}</span>
+            <span class="candidate-data">당원 ${candidate.party} · 중앙위 ${candidate.central}</span>
+          </span>
+          <span class="score">${candidate.score.toFixed(1)}</span>
+          <span class="pass-label">${candidate.passed ? "통과" : "탈락"}</span>
+        </div>
+      `).join("");
+
+      updateJourney();
+    }
+
+    function renderCandidatePicks() {
+      candidatePicks.innerHTML = cutoffCandidates.map((candidate) => `
+        <button class="candidate-pick${candidate.id === activeCandidate ? " active" : ""}" type="button" data-candidate="${candidate.id}">
+          <span>${candidate.name}</span>
+          <span>${candidate.party}/${candidate.central}</span>
+        </button>
+      `).join("");
+      Array.from(document.querySelectorAll(".candidate-pick")).forEach((button) => {
+        button.addEventListener("click", () => {
+          activeCandidate = button.dataset.candidate;
+          renderCandidatePicks();
+          updateJourney();
+        });
+      });
+    }
+
+    function updateJourney() {
+      const results = getCutoffResults();
+      const candidate = results.find((item) => item.id === activeCandidate);
+      if (!candidate) return;
+
+      const hurdles = [
+        {
+          title: "예외 인정",
+          desc: "사퇴 시한·출마 조건 등 정치적 예외를 인정받는 단계",
+          passed: candidate.exception
+        },
+        {
+          title: "서류 심사",
+          desc: "기탁금, 등록 서류, 자격 요건을 확인하는 단계",
+          passed: candidate.docs
+        },
+        {
+          title: "예비경선",
+          desc: "중앙위 반영률에 따라 본경선 진출자를 압축하는 단계",
+          passed: candidate.passed
+        },
+        {
+          title: "본경선",
+          desc: "지역별 순회 투표와 여론 반영이 누적되는 최종 단계",
+          passed: candidate.passed && candidate.docs && candidate.exception
+        }
+      ];
+
+      const failedIndex = hurdles.findIndex((hurdle) => !hurdle.passed);
+      const passedCount = failedIndex === -1 ? hurdles.length : failedIndex;
+      const progressWidth = failedIndex === -1 ? 100 : Math.max(0, ((passedCount - 0.2) / (hurdles.length - 1)) * 100);
+      routeProgress.style.width = `${Math.min(100, progressWidth)}%`;
+      routeProgress.style.background = failedIndex === -1 ? "#3e7d42" : "#c95042";
+
+      hurdleGrid.innerHTML = hurdles.map((hurdle, index) => {
+        let state = "";
+        if (hurdle.passed) state = " passed";
+        if (!hurdle.passed && index === failedIndex) state = " failed";
+        return `
+          <div class="hurdle${state}">
+            <span class="hurdle-dot">${hurdle.passed ? "✓" : index === failedIndex ? "×" : index + 1}</span>
+            <h4>${hurdle.title}</h4>
+            <p>${hurdle.desc}</p>
+          </div>
+        `;
+      }).join("");
+
+      ledgerParty.textContent = candidate.party;
+      ledgerCentral.textContent = candidate.central;
+      ledgerScore.textContent = candidate.score.toFixed(1);
+      ledgerStatus.textContent = failedIndex === -1 ? "통과" : "중단";
+
+      if (failedIndex === -1) {
+        journeyHeadline.textContent = `${candidate.name}는 본경선에 진출합니다.`;
+        journeyCopy.textContent = "예비경선 점수와 등록 요건을 모두 통과한 상태입니다. 이후에는 지역별 누적 득표와 본경선 반영 방식이 핵심 변수가 됩니다.";
+      } else {
+        journeyHeadline.textContent = `${candidate.name}는 ${hurdles[failedIndex].title} 단계에서 멈춥니다.`;
+        journeyCopy.textContent = "같은 후보라도 예외 인정, 서류 심사, 컷오프 반영률 중 어느 기준을 적용하느냐에 따라 유권자가 본경선에서 만나는 선택지가 달라집니다.";
+      }
+    }
+
+    scenarioTabs.forEach((tab) => {
+      tab.addEventListener("click", () => setScenario(tab.dataset.scenario));
+    });
+
+    regionWeightInput.addEventListener("input", updateWeightScenario);
+    centralWeightInput.addEventListener("input", updateCutoffScenario);
+    window.addEventListener("resize", updateAuthorityDetail);
+
+    renderAuthorities();
+    updateWeightScenario();
+    updateCutoffScenario();
+    renderCandidatePicks();
+    updateJourney();
+  </script>
+</body>
+</html>
